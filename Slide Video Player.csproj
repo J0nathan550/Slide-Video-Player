@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <RootNamespace>Slide_Video_Player</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <ApplicationIcon>Images\blue-media-player-icon.ico</ApplicationIcon>
+    <Company>J0nathan550 (Илья Худокормов)</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\blue-media-player-icon.png" />
+    <None Remove="Images\media-player-icon.png" />
+    <None Remove="Images\note-icon-1024.png" />
+    <None Remove="Images\note-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Images\blue-media-player-icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ColorPickerWPF" Version="1.0.9" />
+    <PackageReference Include="DiscordRichPresence" Version="1.1.3.18" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\blue-media-player-icon.png" />
+    <Resource Include="Images\media-player-icon.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\media-player-icon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\note-icon-1024.png" />
+    <Resource Include="Images\note-icon.png" />
+  </ItemGroup>
+
+</Project>

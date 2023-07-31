@@ -1,0 +1,241 @@
+﻿<Window x:Class="Slide_Video_Player.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Slide_Video_Player"
+        mc:Ignorable="d"
+        Title="Slide Video Player" Height="450" Width="800" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDownInput" MouseMove="Window_MouseMoved" Closed="Window_Closed" Icon="/Images/blue-media-player-icon.png">
+    <Grid>
+        <Menu Name="menuVideoPlayer" Panel.ZIndex="1" VerticalAlignment="Top" Visibility="Visible">
+            <MenuItem Name="menuItemFile" Header="Файл">
+                <MenuItem Name="menuSubItemChooseFiles"  Header="Выбрать файлы..." Click="ChooseFile_Click"></MenuItem>
+                <MenuItem Name="menuSubItemListOfFiles" Header="Список файлов..." Click="ListOfFiles_Click"></MenuItem>
+                <MenuItem Name="menuSubItemRemoveFiles" Header="Убрать все файлы..." Click="RemoveFiles_Click"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="menuSubItemCloseMenuFile" Header="Закрыть"></MenuItem>
+            </MenuItem>
+            <MenuItem Name="menuItemSettings" Header="Настройки">
+                <MenuItem Name="menuSubItemChangeHotkeys" Header="Сменить горячие клавиши..." Click="ChangeKeyBindingMenu_Click"></MenuItem>
+                <MenuItem Name="menuSubItemChangeLanguage" Header="Сменить язык...">
+                    <ComboBox Name="comboBoxLanguage" SelectedIndex="1" SelectionChanged="ComboBoxLanguage_Changed">
+                        <ComboBoxItem Name="menuSubItemEnglishLanguage" Content="Английский"></ComboBoxItem>
+                        <ComboBoxItem Name="menuSubItemRussianLanguage" Content="Русский"></ComboBoxItem>
+                        <ComboBoxItem Name="menuSubItemUkrainianLanguage" Content="Украинский"></ComboBoxItem>
+                    </ComboBox>
+                </MenuItem>
+                <MenuItem Name="menuSubItemChangeBackground" Header="Сменить фон..." Click="ChangeBackground_Click"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Discord RPC...">
+                    <MenuItem Header="Discord Client...">
+                        <TextBox TextWrapping="NoWrap"></TextBox>
+                    </MenuItem>
+                    <MenuItem Header="Discord Assets...">
+                        <ComboBox SelectedIndex="0">
+                            <Label Content="Large Image..."></Label>
+                            <TextBox ToolTip="Large Image Link" TextWrapping="NoWrap"></TextBox>
+                            <TextBox ToolTip="Large Image Text..." TextWrapping="NoWrap"></TextBox>
+                        </ComboBox>
+                        <Separator></Separator>
+                        <ComboBox SelectedIndex="0">
+                            <Label Content="Small Image..."></Label>
+                            <TextBox ToolTip="Small Image Link" TextWrapping="NoWrap"></TextBox>
+                            <TextBox ToolTip="Small Image Text..." TextWrapping="NoWrap"></TextBox>
+                        </ComboBox>
+                    </MenuItem>
+                    <MenuItem Header="Discord Buttons...">
+                        <ComboBox SelectedIndex="0">
+                            <Label Content="First Button..."></Label>
+                            <TextBox ToolTip="First Button Label" TextWrapping="NoWrap"></TextBox>
+                            <TextBox ToolTip="First Button Url" TextWrapping="NoWrap"></TextBox>
+                        </ComboBox>
+                        <Separator></Separator>
+                        <ComboBox SelectedIndex="0">
+                            <Label Content="Second Button..."></Label>
+                            <TextBox ToolTip="Second Button Label" TextWrapping="NoWrap"></TextBox>
+                            <TextBox ToolTip="Second Button Url" TextWrapping="NoWrap"></TextBox>
+                        </ComboBox>
+                    </MenuItem>
+                    <MenuItem Header="Discord Timestamp...">
+                        <RadioButton Name="discordRadioButtonTimestampCounting" Content="Timestamp counting?"></RadioButton>
+                        <RadioButton Name="discordRadioButtonTimestampRemaining" Content="Timestamp showing how many remain?" ></RadioButton>
+                    </MenuItem>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="menuSubItemSettingsOfPlayer" Header="Настройки плеера...">
+                    <CheckBox Name="newVideoAfterEndCheckBox" Content="Переходить на следующее видео, если текущее закончилось?" Click="ChangeNewVideoAfterEnd_Click"></CheckBox>
+                    <MenuItem Name="menuSubItemSettingsResolution" Header="Разрешение видео...">
+                        <RadioButton Name="IsPerfectWideRadio" ToolTip="Показывает видео в его точном размере (возможно видны края пустого поля (цвет фона) )" Content="Показывать видео в правильном размере" Click="IsPerfectWideRadioButton_Clicked"></RadioButton>
+                        <RadioButton Name="IsWideRadio" ToolTip="Закрывает задние края фона, но при этом растягивает видео по всему экрану." Content="Показывать видео в растянутом размере" Click="IsWideRadio_Clicked"></RadioButton>
+                    </MenuItem>
+                </MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="menuClearRAM" Header="Очистить оперативную память..." Click="ClearRAM_Click"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Name="menuSettingsClose" Header="Закрыть"></MenuItem>
+            </MenuItem>
+            <MenuItem  Name="menuItemInformation" Header="Справка" Click="ShowInformation_Click"></MenuItem>
+            <MenuItem Name="menuItemCreator" Header="Создатель" Click="CreatorClick"></MenuItem>
+        </Menu>
+        <Grid Name="entireBody" Visibility="Visible">
+            <MediaElement ScrubbingEnabled="True" Panel.ZIndex="-1" Name="videoPlayer" UnloadedBehavior="Manual" Grid.RowSpan="2"/>
+            <Grid Name="videoPlayerPanel" VerticalAlignment="Bottom" Background="#7F000000" Visibility="Visible">
+                <Label Name="currentTime" Content="00:00:00" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="2,0,0,70" Background="#00000000" Foreground="White"/>
+                <Label Name="finalTime" Content="00:00:00" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,70" Background="Transparent" Foreground="White"></Label>
+                <Slider Cursor="Hand" Name="progressOfVideoSlider"  Margin="5,0,5,50" VerticalAlignment="Bottom" ValueChanged="progressOfVideoSlider_Changed"/>
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,5">
+                    <Border Name="fromStartVideoButton" Background="White" Height="40" CornerRadius="6" BorderThickness="1" BorderBrush="LightGray" Margin="0,0,10,0" MouseDown="FromStartButton_Click" Cursor="Hand">
+                        <Label Name="fromStartLabel" Content="До нач." HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                    </Border>
+                    <Border Name="previousVideoButton" Background="White" Height="40" CornerRadius="6" BorderThickness="1" BorderBrush="LightGray" Margin="0,0,10,0" MouseDown="PreviousVideoButton_Click" Cursor="Hand">
+                        <Label Name="previousLabel" Content="Пред." HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                    </Border>
+                    <Border Name="pauseButton" Background="White" Height="40" CornerRadius="6" BorderThickness="1" BorderBrush="LightGray" Margin="0,0,10,0" MouseDown="PauseButton_Click" Cursor="Hand">
+                        <Label Name="pauseText" Content="Пауза" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                    </Border>
+                    <Border Name="nextVideoButton" Background="White" Height="40" CornerRadius="6" BorderThickness="1" BorderBrush="LightGray" Margin="0,0,10,0" Cursor="Hand">
+                        <Label Name="nextVideoLabel" Content="След." HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseDown="NextVideoButton_Click"></Label>
+                    </Border>
+                    <Border Name="endOfVideoButton" Background="White" Height="40" CornerRadius="6" BorderThickness="1" BorderBrush="LightGray" MouseDown="EndOfVideoButton_Click" Cursor="Hand">
+                        <Label Name="nextVideoToEndLabel" Content="До конц." HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                    </Border>
+                </WrapPanel>
+                <WrapPanel VerticalAlignment="Bottom" Margin="0,0,0,15" HorizontalAlignment="Right" Width="170">
+                    <Slider Cursor="Hand" Name="volumeSlider" Width="100" VerticalAlignment="Center" ValueChanged="volumeSlider_ChangedValue" Maximum="1"></Slider>
+                    <Label Name="volumeSliderPercent" Content="100%" Background="#00000000" Foreground="White"></Label>
+                </WrapPanel>
+            </Grid>
+            <Grid Visibility="Hidden" Name="listOfFilesGrid" Margin="0,18,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="17*"/>
+                    <ColumnDefinition Width="17*"/>
+                    <ColumnDefinition Width="17*"/>
+                    <ColumnDefinition Width="17*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="173*"/>
+                    <RowDefinition Height="35*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="1" Grid.Column="0" Background="White" BorderThickness="1" BorderBrush="LightGray" Cursor="Hand" MouseDown="RemoveFileFromList_Click">
+                    <Label Name="removeLabel" Content="УБРАТЬ" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="1" Background="White" BorderThickness="1" BorderBrush="LightGray" Cursor="Hand" MouseDown="UpButtonFileList_Click">
+                    <Label Name="upLabel" Content="ВВЕРХ" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="2" Background="White" BorderThickness="1" BorderBrush="LightGray" Cursor="Hand" MouseDown="DownButtonFileList_Click">
+                    <Label Name="downLabel" Content="ВНИЗ" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="3" Background="White" BorderThickness="1" BorderBrush="LightGray" Cursor="Hand" MouseDown="RemoveFiles_Click">
+                    <Label Name="removeAllLabel" Content="УБРАТЬ ВСЁ" FontSize="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </Border>
+                <ScrollViewer Grid.ColumnSpan="4" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                    <StackPanel Name="fileList">
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+            <Grid Name="keyBindingsGrid" Margin="0,18,0,0" Visibility="Hidden">
+                <StackPanel MouseDown="DeselectedKeyBind_Click">
+                    <Border Background="White" BorderThickness="1" BorderBrush="#FFBFBDBD">
+                        <WrapPanel Orientation="Horizontal">
+                            <Label Name="bindLabelFullscreen" Content="Полноэкранный режим: "></Label>
+                            <Button Name="fullScreenButton" Content="F11" Click="FullScreenKeyBind_Click"/>
+                        </WrapPanel>
+                    </Border>
+                    <Border Background="White" BorderThickness="1" BorderBrush="#FFBFBDBD" Margin="0,5,0,0">
+                        <WrapPanel Orientation="Horizontal">
+                            <Label Name="bindLabelDisableFullscreen" Content="Выбраться из полноэкранного режима: "></Label>
+                            <Button Name="removeFullScreenButton" Content="Esc" Click="EscapeFullScreen_Click"></Button>
+                        </WrapPanel>
+                    </Border>
+                    <Border Background="White" BorderThickness="1" BorderBrush="#FFBFBDBD" Margin="0,5,0,0">
+                        <WrapPanel Orientation="Horizontal">
+                            <Label Name="bindPastFiveSeconds" Content="Обратно на пять секунд: "></Label>
+                            <Button Name="pastFiveSecondsButton" Content="Left" Click="FiveSecondsToPast_Click"></Button>
+                        </WrapPanel>
+                    </Border>
+                    <Border Background="White" BorderThickness="1" BorderBrush="#FFBFBDBD" Margin="0,5,0,0">
+                        <WrapPanel Orientation="Horizontal">
+                            <Label Name="bindToFutureFiveSeconds" Content="Вперёд на пять секунд: "></Label>
+                            <Button Name="nextFiveSecondsButton" Content="Right" Click="nextFiveSecondsButton_Click"></Button>
+                        </WrapPanel>
+                    </Border>
+                    <Border Background="White" BorderThickness="1" BorderBrush="#FFBFBDBD" Margin="0,5,0,0">
+                        <WrapPanel Orientation="Horizontal">
+                            <Label Name="bindVideoPreviousLabel" Content="Предыдущие видео: "></Label>
+                            <Button Name="previousVideoButtonBind" Content="F6" KeyDown="PreviousVideoBind_Click"></Button>
+                        </WrapPanel>
+                    </Border>
+                    <Border Background="White" BorderThickness="1" BorderBrush="#FFBFBDBD" Margin="0,5,0,0">
+                        <WrapPanel Orientation="Horizontal">
+                            <Label Name="bindNextVideo" Content="Следущее видео: "></Label>
+                            <Button Name="nextVideoButtonBind" Content="F8" KeyDown="NextVideoBind_Click"></Button>
+                        </WrapPanel>
+                    </Border>
+                    <Border Background="White" BorderThickness="1" BorderBrush="#FFBFBDBD" Margin="0,5,0,0">
+                        <WrapPanel Orientation="Horizontal">
+                            <Label Name="bindPause" Content="Пауза: "></Label>
+                            <Button Name="pauseButtonBind" Content="Space" KeyDown="PauseButtonBind_Click"></Button>
+                        </WrapPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" Name="infoGrid" Visibility="Hidden">
+            <Grid>
+                <TextBlock TextAlignment="Center" FontSize="24" FontWeight="Bold" Text="Справка" VerticalAlignment="Top"></TextBlock>
+                <TextBlock TextWrapping="Wrap" FontSize="17" FontWeight="Medium" Margin="20,45,20,0" HorizontalAlignment="Center">
+                    <TextBlock.Inlines>
+                        <Run FontWeight="Bold">Slide Video Player -</Run>
+                        <Run>Инновационный видео-плеер с уникальными функциями!</Run>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run FontWeight="Bold">Slide Video Player</Run>
+                        <Run>- это передовое приложение для воспроизведения видео и аудио, которое позволяет пользователям наслаждаться просмотром видео и прослушиванием музыки в одном многофункциональном инструменте.</Run>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run FontWeight="Bold">Основные функции:</Run>
+                        <LineBreak/>
+                        <Run>• Загружайте музыку и видео в программу и наслаждайтесь их прослушиванием и просмотром.</Run>
+                        <LineBreak/>
+                        <Run>• Переключайтесь между режимами воспроизведения видео и аудио.</Run>
+                        <LineBreak/>
+                        <Run>• Изменяйте язык интерфейса для наилучшего комфорта использования.</Run>
+                        <LineBreak/>
+                        <Run>• Персонализируйте фоновое изображение приложения, чтобы сделать его уникальным.</Run>
+                        <LineBreak/>
+                        <Run>• Регулируйте расширение видео для наилучшего соответствия вашему экрану или предпочтениям.</Run>
+                        <LineBreak/>
+                        <Run>• Изменяйте горячие клавиши для удобного управления воспроизведением.</Run>
+                    </TextBlock.Inlines>
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" FontSize="17" FontWeight="Medium" Margin="20,400,20,0" HorizontalAlignment="Center">
+                    <TextBlock.Inlines>
+                        <Run FontWeight="Bold">Как пользоваться:</Run>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run>1. Загрузка видео/аудио файлов:</Run>
+                        <LineBreak/>
+                        <Run>- Чтобы загрузить видео/аудио файлы, выберите элемент "Выбрать файлы" в меню.</Run>
+                        <LineBreak/>
+                        <Run>- Появится диалоговое окно, в котором можно выбрать видео/аудио файлы. Выделите все нужные файлы и они будут добавлены в список "Файлы", который находится в меню "Список файлов".</Run>
+                        <LineBreak/>
+                        <Run>- В списке "Файлы" вы можете просмотреть порядок воспроизведения видео/аудио файлов. Для управления списком доступны четыре кнопки: "УБРАТЬ", "ВВЕРХ", "ВНИЗ", "УБРАТЬ ВСЁ". С их помощью вы можете удалять файлы, изменять их позицию в плеере или удалить все файлы из списка.</Run>
+                        <LineBreak/>
+                        <Run>- Также в меню есть опция "Убрать файлы", которая позволяет удалить все файлы из списка без открытия диалогового окна.</Run>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run>2. Настройки:</Run>
+                        <LineBreak/>
+                        <Run>- В меню "Настройки" вы найдете опции для изменения горячих клавиш, фона, настроек плеера, смены языка интерфейса и очистки оперативной памяти.</Run>
+                        <LineBreak/>
+                        <Run>- Внутри настроек плеера вы можете настроить расширение видео для достижения широкого или оригинального формата. Также имеется возможность выбрать, хотите ли вы воспроизводить видео сразу или отложить воспроизведение на потом.</Run>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run>by J0nathan550 © 2023</Run>
+                    </TextBlock.Inlines>
+                </TextBlock>
+                <Button Content="Закрыть Справку" VerticalAlignment="Bottom" Click="ShowInformation_Click"></Button>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>
