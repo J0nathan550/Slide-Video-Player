@@ -26,42 +26,6 @@
                 </MenuItem>
                 <MenuItem Name="menuSubItemChangeBackground" Header="Сменить фон..." Click="ChangeBackground_Click"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Discord RPC...">
-                    <MenuItem Header="Discord Client...">
-                        <TextBox TextWrapping="NoWrap"></TextBox>
-                    </MenuItem>
-                    <MenuItem Header="Discord Assets...">
-                        <ComboBox SelectedIndex="0">
-                            <Label Content="Large Image..."></Label>
-                            <TextBox ToolTip="Large Image Link" TextWrapping="NoWrap"></TextBox>
-                            <TextBox ToolTip="Large Image Text..." TextWrapping="NoWrap"></TextBox>
-                        </ComboBox>
-                        <Separator></Separator>
-                        <ComboBox SelectedIndex="0">
-                            <Label Content="Small Image..."></Label>
-                            <TextBox ToolTip="Small Image Link" TextWrapping="NoWrap"></TextBox>
-                            <TextBox ToolTip="Small Image Text..." TextWrapping="NoWrap"></TextBox>
-                        </ComboBox>
-                    </MenuItem>
-                    <MenuItem Header="Discord Buttons...">
-                        <ComboBox SelectedIndex="0">
-                            <Label Content="First Button..."></Label>
-                            <TextBox ToolTip="First Button Label" TextWrapping="NoWrap"></TextBox>
-                            <TextBox ToolTip="First Button Url" TextWrapping="NoWrap"></TextBox>
-                        </ComboBox>
-                        <Separator></Separator>
-                        <ComboBox SelectedIndex="0">
-                            <Label Content="Second Button..."></Label>
-                            <TextBox ToolTip="Second Button Label" TextWrapping="NoWrap"></TextBox>
-                            <TextBox ToolTip="Second Button Url" TextWrapping="NoWrap"></TextBox>
-                        </ComboBox>
-                    </MenuItem>
-                    <MenuItem Header="Discord Timestamp...">
-                        <RadioButton Name="discordRadioButtonTimestampCounting" Content="Timestamp counting?"></RadioButton>
-                        <RadioButton Name="discordRadioButtonTimestampRemaining" Content="Timestamp showing how many remain?" ></RadioButton>
-                    </MenuItem>
-                </MenuItem>
-                <Separator></Separator>
                 <MenuItem Name="menuSubItemSettingsOfPlayer" Header="Настройки плеера...">
                     <CheckBox Name="newVideoAfterEndCheckBox" Content="Переходить на следующее видео, если текущее закончилось?" Click="ChangeNewVideoAfterEnd_Click"></CheckBox>
                     <MenuItem Name="menuSubItemSettingsResolution" Header="Разрешение видео...">
